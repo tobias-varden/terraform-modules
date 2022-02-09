@@ -40,6 +40,8 @@ locals {
         memory = var.service_container.memory
         desired_count = var.desired_count
     }
+
+    desired_count = lookup(var.environment_overrides, local.env_name, local.default_settings).desired_count
 }
 
 resource "aws_ecs_task_definition" "this" {
@@ -84,9 +86,9 @@ resource "aws_ecs_task_definition" "this" {
 
 resource "aws_ecs_service" "this" {
     name = "${local.safe_name}-${local.env_name}"
-    cluster = var.ecs_cluster_id
+    cluster = var.ecs_cluster.id
     task_definition = aws_ecs_task_definition.this.arn
-    desired_count = lookup(var.environment_overrides, local.env_name, local.default_settings).desired_count
+    desired_count = local.desired_count
     launch_type = "FARGATE"
     tags = merge(var.tags, { Name = "${var.family}-${local.safe_name}-${local.env_name}-svc" })
 

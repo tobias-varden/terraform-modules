@@ -15,8 +15,11 @@ variable "task_role_arn" {
     default = ""
 }
 
-variable "ecs_cluster_id" {
-    type = string
+variable "ecs_cluster" {
+    type = object({
+        name = string
+        id = string
+    })
 }
 
 variable "region" {
