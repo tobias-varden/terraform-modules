@@ -2,6 +2,10 @@ locals {
     env_name = lower(var.environment)
 
     port = 4317
+
+    environment_variables = [for name, value in var.environment_variables : [
+        { name = name, value = value }
+    ]]
 }
 
 data "aws_ecr_repository" "this" {
@@ -50,6 +54,7 @@ resource "aws_ecs_task_definition" "this" {
                     protocol = "tcp"
                 }
             ]
+            environment = flatten(local.environment_variables)
             essential = true
             logConfiguration = {
                 logDriver = "awslogs"

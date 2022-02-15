@@ -48,3 +48,8 @@ variable "family" {
 variable "tag" {
     type = string
 }
+
+variable "environment_variables" {
+    type = map(string)
+    default = {}
+}
