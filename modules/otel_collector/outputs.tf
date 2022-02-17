@@ -9,3 +9,7 @@ output "service_discovery_fqn" {
 output "port" {
     value = local.port
 }
+
+output "log_group" {
+    value = aws_cloudwatch_log_group.this
+}

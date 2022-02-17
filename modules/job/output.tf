@@ -9,3 +9,7 @@ output "job_definition" {
 output "queue" {
     value = aws_batch_job_queue.this
 }
+
+output "log_group" {
+    value = aws_cloudwatch_log_group.this
+}
