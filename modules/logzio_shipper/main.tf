@@ -78,10 +78,12 @@ resource "aws_lambda_function" "this" {
 }
 
 resource "aws_lambda_permission" "this" {
-    statement_id = "AllowExecutionFromCloudWatch"
+    count = length(var.log_groups)
+    statement_id = "${var.family}-${local.safe_name}-${local.env_name}-${replace(var.log_groups[count.index].name, "/", "-")}-statement"
     action = "lambda:InvokeFunction"
     function_name = aws_lambda_function.this.function_name
     principal = "logs.${data.aws_region.current.name}.amazonaws.com"
+    source_arn = format("%s:*", var.log_groups[count.index].arn)
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "this" {

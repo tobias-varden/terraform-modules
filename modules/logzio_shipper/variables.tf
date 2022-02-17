@@ -44,6 +44,7 @@ variable "additional_values" {
 
 variable "log_groups" {
     type = list(object({
+        arn = string
         name = string
     }))
     default = []
