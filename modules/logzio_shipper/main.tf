@@ -31,11 +31,7 @@ locals {
     env_name = lower(var.environment)
 
     enrich_values = merge(
-        var.additional_values,
-        {
-            "family" = var.family
-            "environment" = var.environment
-        }
+        var.additional_values
     )
 
     additional_values = join(";", [for name, value in local.enrich_values : "${name}=${value}"])
@@ -61,7 +57,7 @@ resource "aws_cloudwatch_log_group" "this" {
 resource "aws_lambda_function" "this" {
     function_name = "${var.family}-${local.safe_name}-${local.env_name}"
     role = aws_iam_role.this.arn
-    filename = "../../data/logzio-cloudwatch.zip"
+    filename = "${path.module}/../../data/logzio-cloudwatch.zip"
     runtime = "python3.9"
     handler = "lambda_function.lambda_handler"
     timeout = var.timeout
