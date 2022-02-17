@@ -24,6 +24,8 @@ data "aws_iam_policy_document" "cw_to_logzio" {
     }
 }
 
+data "aws_region" "current" {}
+
 locals {
 
     safe_name = "logzio-shipper"
@@ -79,7 +81,7 @@ resource "aws_lambda_permission" "this" {
     statement_id = "AllowExecutionFromCloudWatch"
     action = "lambda:InvokeFunction"
     function_name = aws_lambda_function.this.function_name
-    principal = "logs.amazonaws.com"
+    principal = "logs.${data.aws_region.current.name}.amazonaws.com"
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "this" {
@@ -88,4 +90,5 @@ resource "aws_cloudwatch_log_subscription_filter" "this" {
     filter_pattern = (var.filter_pattern == null) ? "" : var.filter_pattern
     destination_arn = aws_lambda_function.this.arn
     log_group_name = var.log_groups[count.index].name
+    depends_on = [aws_lambda_permission.this]
 }
