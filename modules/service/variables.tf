@@ -149,3 +149,14 @@ variable "parameters" {
     }))
     default = {}
 }
+
+variable "healthCheck" {
+    type = object({
+        command = list(string)
+        interval = number
+        retries = number
+        timeout = number
+        startPeriod = number
+    })
+    default = null
+}

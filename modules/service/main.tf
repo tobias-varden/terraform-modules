@@ -77,6 +77,8 @@ resource "aws_ecs_task_definition" "this" {
                     awslogs-stream-prefix = "svc"
                 }
             }
+
+            healthCheck = var.healthCheck
         }
     ])
     tags = merge(var.tags, { Name = "${local.safe_name}-${local.env_name}-task-definition" })
