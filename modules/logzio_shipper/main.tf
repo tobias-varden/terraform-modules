@@ -56,10 +56,16 @@ resource "aws_cloudwatch_log_group" "this" {
     retention_in_days = 14
 }
 
+data "archive_file" "lambda_zip" {
+    type = "zip"
+    source_dir = "${path.module}/../../src/logzio_shipper"
+    output_path = "${path.module}/dist/lambda.zip"
+}
+
 resource "aws_lambda_function" "this" {
     function_name = "${var.family}-${local.safe_name}-${local.env_name}"
     role = aws_iam_role.this.arn
-    filename = "${path.module}/../../data/logzio-cloudwatch.zip"
+    filename = data.archive_file.lambda_zip.output_path
     runtime = "python3.9"
     handler = "lambda_function.lambda_handler"
     timeout = var.timeout
