@@ -5,8 +5,12 @@ data "aws_vpc" "this" {
   }
 }
 
-data "aws_subnet_ids" "private_subnet_ids" {
-  vpc_id = data.aws_vpc.this.id
+data "aws_subnets" "private_subnet_ids" {
+
+  filter {
+    name = "vpc-id"
+    values = [data.aws_vpc.this.id]
+  }
 
   tags = {
     Environment = var.vpc_tags.environment
@@ -15,13 +19,17 @@ data "aws_subnet_ids" "private_subnet_ids" {
 }
 
 data "aws_subnet" "private_subnets" {
-    for_each = data.aws_subnet_ids.private_subnet_ids.ids
+    for_each = toset(data.aws_subnets.private_subnet_ids.ids)
     id = each.value
     vpc_id = data.aws_vpc.this.id
 }
 
-data "aws_subnet_ids" "public_subnet_ids" {
-  vpc_id = data.aws_vpc.this.id
+data "aws_subnets" "public_subnet_ids" {
+
+  filter {
+    name = "vpc-id"
+    values = [data.aws_vpc.this.id]
+  }
 
   tags = {
     Environment = var.vpc_tags.environment
@@ -30,7 +38,7 @@ data "aws_subnet_ids" "public_subnet_ids" {
 }
 
 data "aws_subnet" "public_subnets" {
-    for_each = data.aws_subnet_ids.public_subnet_ids.ids
+    for_each = toset(data.aws_subnets.public_subnet_ids.ids)
     id = each.value
     vpc_id = data.aws_vpc.this.id
 }
