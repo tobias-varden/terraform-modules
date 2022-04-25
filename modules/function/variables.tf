@@ -10,6 +10,11 @@ variable "name" {
     type = string
 }
 
+variable "memory" {
+    type = number
+    default = 128
+}
+
 variable "environment" {
     type = string
     default = "Development"

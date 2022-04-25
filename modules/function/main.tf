@@ -64,7 +64,7 @@ resource "aws_lambda_function" "this" {
     image_uri = "${data.aws_ecr_repository.this.repository_url}:${local.safe_image_tag}"
     tags = merge(var.tags, { Name = "${var.family}-${local.safe_name}-${local.env_name}-function" })
     timeout = var.timeout
-
+    memory_size = var.memory
     environment {
         variables = { for item in concat(local.service_environment_variables, flatten(local.service_dependencies), flatten(local.environment_variables)) : (replace(item.name, "-", "_D_")) => item.value }
     }
