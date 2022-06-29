@@ -10,6 +10,11 @@ variable "name" {
     type = string
 }
 
+variable "architecture" {
+    type = string
+    default = "x86_64"
+}
+
 variable "memory" {
     type = number
     default = 128

@@ -58,6 +58,7 @@ resource "aws_cloudwatch_log_group" "this" {
 }
 
 resource "aws_lambda_function" "this" {
+    architectures = [var.architecture]
     function_name = "${var.family}-${local.safe_name}-${local.env_name}"
     role = aws_iam_role.this.arn
     package_type = "Image"
