@@ -66,7 +66,7 @@ resource "aws_ecs_task_definition" "this" {
             }
         }
     ])
-    tags = merge(var.tags, { Name = "otel-collector-${local.env_name}-task-definition" })
+    tags = merge(var.tags, { Name = "${var.family}-otel-collector-${local.env_name}-task-definition" })
     depends_on = [aws_cloudwatch_log_group.this]
 }
 
@@ -88,13 +88,13 @@ resource "aws_service_discovery_service" "this" {
         failure_threshold = 1
     }
 
-    tags = merge(var.tags, { Name = "otel-collector-${local.env_name}-discovery-service" })
+    tags = merge(var.tags, { Name = "${var.family}-otel-collector-${local.env_name}-discovery-service" })
 }
 
 resource "aws_security_group" "this" {
-    name = "otel-collector-${local.env_name}-sg"
+    name = "${var.family}-otel-collector-${local.env_name}-sg"
     vpc_id = var.vpc.id
-    tags = merge(var.tags, { Name = "otel-collector-${local.env_name}-sg" })
+    tags = merge(var.tags, { Name = "${var.family}-otel-collector-${local.env_name}-sg" })
 
     egress {
         protocol    = "-1"
