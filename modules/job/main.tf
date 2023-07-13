@@ -58,6 +58,9 @@ resource "aws_batch_job_definition" "this" {
     tags = merge(var.tags, { Name = "${var.family}-${local.safe_name}-${local.env_name}-job-definition" })
     type = "container"
     platform_capabilities = [ "FARGATE" ]
+    retry_strategy {
+        attempts = var.retries
+    }
     container_properties = jsonencode({
         image = "${data.aws_ecr_repository.this.repository_url}:${local.safe_image_tag}"
         command = var.command
