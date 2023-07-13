@@ -98,3 +98,8 @@ variable "parameters" {
     }))
     default = {}
 }
+
+variable "retries" {
+    type = number
+    default = 1
+}
